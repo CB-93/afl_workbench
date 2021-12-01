@@ -19,25 +19,7 @@ class interpreterPanel:
             "MODS": ["redimension", "apply"],
             "CREATE": ["create", "build"]
         }
-        syntax_compilation = "|".join([r"\b(?P<"+f"{k}"+f">{'|'.join(v)})"+r"\b" for k, v in self.keywords.items()])
-        cdg = ic.ColorDelegator()
-        cdg.prog = re.compile(syntax_compilation + "|" + ic.make_pat(), re.S)
-        cdg.idprog = re.compile(r'\s+(\w+)', re.S)
-
-        cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
-        cdg.tagdefs['CREATE'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
-        cdg.tagdefs['ADMIN'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
-        cdg.tagdefs['MODS'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
-        cdg.tagdefs['DISPLAY'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
-
-        # These five lines are optional. If omitted, default colours are used.
-        cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000', 'background': '#FFFFFF'}
-        cdg.tagdefs['KEYWORD'] = {'foreground': '#007F00', 'background': '#FFFFFF'}
-        cdg.tagdefs['BUILTIN'] = {'foreground': '#7F7F00', 'background': '#FFFFFF'}
-        cdg.tagdefs['STRING'] = {'foreground': '#7F3F00', 'background': '#FFFFFF'}
-        cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F', 'background': '#FFFFFF'}
-
-        ip.Percolator(self.aflText).insertfilter(cdg)
+        self.syntax_color_settings()
     def onExecute(self, event, displayFrame=None):
         # only if this window is focused on
         if str(self.root.focus_get()) == f".{self.textName}":
@@ -46,3 +28,31 @@ class interpreterPanel:
         else:
             print("Focus on the interpreter window first")
             print(self.root.focus_get())
+    def syntax_color_settings(self):
+        syntax_compilation = "|".join([
+            r"\b(?P<" + f"{k}" + f">{'|'.join(v)})" + r"\b"
+            for k, v in self.keywords.items()])
+        cdg = ic.ColorDelegator()
+        cdg.prog = re.compile(syntax_compilation + "|" + ic.make_pat(), re.S)
+        cdg.idprog = re.compile(r'\s+(\w+)', re.S)
+        cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F',
+                                  'background': '#FFFFFF'}
+        cdg.tagdefs['CREATE'] = {'foreground': '#7F7F7F',
+                                 'background': '#FFFFFF'}
+        cdg.tagdefs['ADMIN'] = {'foreground': '#7F7F7F',
+                                'background': '#FFFFFF'}
+        cdg.tagdefs['MODS'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['DISPLAY'] = {'foreground': '#7F7F7F',
+                                  'background': '#FFFFFF'}
+        cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000',
+                                  'background': '#FFFFFF'}
+        cdg.tagdefs['KEYWORD'] = {'foreground': '#000000',
+                                  'background': '#FFFFFF'}
+        cdg.tagdefs['BUILTIN'] = {'foreground': '#000000',
+                                  'background': '#FFFFFF'}
+        cdg.tagdefs['STRING'] = {'foreground': '#7F3F00',
+                                 'background': '#FFFFFF'}
+        cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F',
+                                     'background': '#FFFFFF'}
+
+        ip.Percolator(self.aflText).insertfilter(cdg)
