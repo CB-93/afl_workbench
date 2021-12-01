@@ -53,9 +53,13 @@ class listingPanel:
                 r_name_attributes = f"{r_name}_attributes"
                 r_name_dimensions = f"{r_name}_dimensions"
                 thisTree.insert(n, 'end', r_name, text=r['name'])
-                thisTree.insert(r_name, 'end', r_name_attributes, text="attributes")
-                thisTree.insert(r_name, 'end', r_name_dimensions, text="dimensions")
+                thisTree.insert(r_name, 'end',
+                                r_name_attributes, text="attributes")
+                thisTree.insert(r_name, 'end',
+                                r_name_dimensions, text="dimensions")
                 for a in [x.strip() for x in r["attributes"].split(",")]:
-                    thisTree.insert(r_name_attributes, 'end', f"{r_name_attributes}: {a}", text=a)
+                    thisTree.insert(r_name_attributes, 'end',
+                                    f"{r_name_attributes}: {a}", text=a)
                 for d in [x.strip() for x in r["dimensions"].split(";")]:
-                    thisTree.insert(r_name_dimensions, 'end', f"{r_name_dimensions}: {d}", text=d)
+                    thisTree.insert(r_name_dimensions, 'end',
+                                    f"{r_name_dimensions}: {d}", text=d)

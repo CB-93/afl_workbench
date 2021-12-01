@@ -2,7 +2,6 @@ from tkinter import END, IntVar, Text
 import idlelib.colorizer as ic
 import idlelib.percolator as ip
 from ..output.outputFrame import *
-from customText import *
 # todo import specific modules
 
 class interpreterPanel:
@@ -35,13 +34,12 @@ class interpreterPanel:
         cdg = ic.ColorDelegator()
         cdg.prog = re.compile(syntax_compilation + "|" + ic.make_pat(), re.S)
         cdg.idprog = re.compile(r'\s+(\w+)', re.S)
-        cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F',
-                                  'background': '#FFFFFF'}
         cdg.tagdefs['CREATE'] = {'foreground': '#7F7F7F',
                                  'background': '#FFFFFF'}
         cdg.tagdefs['ADMIN'] = {'foreground': '#7F7F7F',
                                 'background': '#FFFFFF'}
-        cdg.tagdefs['MODS'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['MODS'] = {'foreground': '#7F7F7F',
+                               'background': '#FFFFFF'}
         cdg.tagdefs['DISPLAY'] = {'foreground': '#7F7F7F',
                                   'background': '#FFFFFF'}
         cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000',
@@ -54,5 +52,4 @@ class interpreterPanel:
                                  'background': '#FFFFFF'}
         cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F',
                                      'background': '#FFFFFF'}
-
         ip.Percolator(self.aflText).insertfilter(cdg)

@@ -40,7 +40,8 @@ class mainFrame:
         for c in self.keyboardBindingsExecute:
             self.root.bind(
                 c,
-                lambda event, arg=self.rightPanel.aflText: self.rightPanel.onExecute(event, self.bottomPanel)
+                lambda event, arg=self.rightPanel.aflText:
+                self.rightPanel.onExecute(event, self.bottomPanel)
             )
     def start(self):
         self.root.mainloop()
