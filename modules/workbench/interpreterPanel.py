@@ -1,16 +1,48 @@
-from tkinter import END, Text
+from tkinter import END, IntVar, Text
+import idlelib.colorizer as ic
+import idlelib.percolator as ip
+from ..output.outputFrame import *
+from customText import *
 # todo import specific modules
 
 class interpreterPanel:
     def __init__(self, root, frame):
         self.root = root
         self.frame = frame
-        self.aflText = Text(self.root, width=200)
-        self.aflText.grid(row=0, column=1, padx=10, pady=2)
+        self.textName = "aflInterpreter"
+        self.aflText = Text(self.root, width=200, name=self.textName)
+        self.aflText.grid(row=0, column=1, padx=10, pady=2, sticky="N")
         self.aflText.config(state="normal")
-        self.root.bind(
-            '<Return>',
-            lambda event, arg=self.aflText: self.onExecute(event)
-        )
-    def onExecute(self, event):
-        print(self.aflText.get(1.0, END+"-1c"))
+        self.keywords = {
+            "ADMIN": ["insert", "delete"],
+            "DISPLAY": ["scan", "secure_scan", "list", "show"],
+            "MODS": ["redimension", "apply"],
+            "CREATE": ["create", "build"]
+        }
+        syntax_compilation = "|".join([r"\b(?P<"+f"{k}"+f">{'|'.join(v)})"+r"\b" for k, v in self.keywords.items()])
+        cdg = ic.ColorDelegator()
+        cdg.prog = re.compile(syntax_compilation + "|" + ic.make_pat(), re.S)
+        cdg.idprog = re.compile(r'\s+(\w+)', re.S)
+
+        cdg.tagdefs['MYGROUP'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['CREATE'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['ADMIN'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['MODS'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+        cdg.tagdefs['DISPLAY'] = {'foreground': '#7F7F7F', 'background': '#FFFFFF'}
+
+        # These five lines are optional. If omitted, default colours are used.
+        cdg.tagdefs['COMMENT'] = {'foreground': '#FF0000', 'background': '#FFFFFF'}
+        cdg.tagdefs['KEYWORD'] = {'foreground': '#007F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['BUILTIN'] = {'foreground': '#7F7F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['STRING'] = {'foreground': '#7F3F00', 'background': '#FFFFFF'}
+        cdg.tagdefs['DEFINITION'] = {'foreground': '#007F7F', 'background': '#FFFFFF'}
+
+        ip.Percolator(self.aflText).insertfilter(cdg)
+    def onExecute(self, event, displayFrame=None):
+        # only if this window is focused on
+        if str(self.root.focus_get()) == f".{self.textName}":
+            myCommand = self.aflText.get(1.0, END+"-1c")
+            displayFrame.inputExecute(myCommand)
+        else:
+            print("Focus on the interpreter window first")
+            print(self.root.focus_get())
